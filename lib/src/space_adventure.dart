@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
-import 'package:dart_space_adventure/dart_space_adventure.dart';
 import 'planetary_system.dart';
+import 'planet.dart';
 
 class SpaceAdventure {
-  PlanetarySystem planetarySystem;
+
+  final PlanetarySystem planetarySystem;
 
   SpaceAdventure({required this.planetarySystem});
 
@@ -12,18 +14,26 @@ class SpaceAdventure {
     printGreeting();
     printIntroduction(responseToPrompt('What is your name?'));
     print('Let\'s go on an adventure!');
-    travel(promptForRandomOrSpecificDestination(
-        'Shall I randomly choose a planet for you to visit? (Y or N)'));
+    if (planetarySystem.hasPlanets) {
+      travel(
+        promptForRandomOrSpecificDestination(
+          'Shall I randomly choose a planet for you to visit? (Y or N)'
+        )
+      );
+    } else {
+      print('Aw, there are no planets to explore.');
+    }
   }
 
   void printGreeting() {
     print('Welcome to the ${planetarySystem.name}!\n'
-        'There are 8 planets to explore.');
+        'There are ${planetarySystem.numberOfPlanets} planets to explore.');
   }
 
   void printIntroduction(String name) {
     print(
-        'Nice to meet you, $name. My name is Eliza, I\'m an old friend of Alexa.');
+      'Nice to meet you, $name. My name is Eliza, I\'m an old friend of Alexa.'
+    );
   }
 
   String responseToPrompt(String prompt) {
@@ -31,22 +41,20 @@ class SpaceAdventure {
     return stdin.readLineSync() ?? '';
   }
 
-  void travelToRandomPlanet() {
-    print('OK! Traveling to Mercury...\n'
-        'Arrived at Mercury. A very hot planet, closest to the sun.');
-  }
-
-  void travelTo(String planetName) {
-    print('Traveling to $planetName...\n'
-        'Arrived at $planetName.');
+  void travelTo(Planet planet) {
+    print('Traveling to ${planet.name}...');
+    print('Arrived at ${planet.name}. ${planet.description}');
   }
 
   void travel(bool randomDesination) {
+    Planet planet;
     if (randomDesination) {
-      travelToRandomPlanet();
+      planet = planetarySystem.randomPlanet();
     } else {
-      travelTo(responseToPrompt('Name the planet you would like to visit.'));
+      planet = planetarySystem.planetWithName(
+        responseToPrompt('Name the planet you would like to visit.'));
     }
+    travelTo(planet);
   }
 
   bool promptForRandomOrSpecificDestination(String prompt) {
