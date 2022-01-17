@@ -24,9 +24,8 @@ void main(List<String> arguments) {
 
 List<Planet> mockPlanets(planetData) {
   List<Planet> planetList = [];
-  planetData.forEach( (e){
-      planetList.add(Planet(name: e['name'], description: e['description']));
-    }
+  planetData.forEach( (e) =>
+      planetList.add(Planet(name: e['name'], description: e['description']))
   );
 
   return planetList;
