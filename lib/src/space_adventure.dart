@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'planetary_system.dart';
 import 'planet.dart';
@@ -51,11 +50,18 @@ class SpaceAdventure {
     if (randomDesination) {
       planet = planetarySystem.randomPlanet();
     } else {
-      planet = planetarySystem.planetWithName(
+      planet = Planet.nullPlanet();
+      while (planet.name == 'Null'){
+        planet = planetarySystem.planetWithName(
         responseToPrompt('Name the planet you would like to visit.'));
+        if (planet.name == 'Null') {
+          print('I\'m sorry, that planet does not exist in this system.');
+        }
+      }
     }
     travelTo(planet);
   }
+
 
   bool promptForRandomOrSpecificDestination(String prompt) {
     String answer = '';
